@@ -382,7 +382,7 @@ ok({ContentType, ResponseHeaders, Body}) ->
 %%      Keep-Alive should be safe.
 should_close() ->
     ForceClose = erlang:get(mochiweb_request_force_close) =/= undefined,
-    DidNotRecv = erlang:get(mochiweb_request_recv) =:= undefined,
+    DidNotRecv = erlang:get(?SAVE_RECV) =:= undefined,
     ForceClose orelse Version < {1, 0}
         %% Connection: close
         orelse get_header_value("connection") =:= "close"
