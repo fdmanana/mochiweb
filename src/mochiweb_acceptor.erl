@@ -22,7 +22,7 @@ init(Server, Listen, Loop) ->
         {error, closed} ->
             exit(normal);
         {error, timeout} ->
-            exit(normal);
+            init(Server, Listen, Loop);
         {error, esslaccept} ->
             exit(normal);
         Other ->
@@ -43,6 +43,6 @@ call_loop(Loop, Socket) ->
 %%
 %% Tests
 %%
--include_lib("eunit/include/eunit.hrl").
 -ifdef(TEST).
+-include_lib("eunit/include/eunit.hrl").
 -endif.
