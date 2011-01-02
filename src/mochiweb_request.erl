@@ -7,7 +7,6 @@
 -author('bob@mochimedia.com').
 
 -include_lib("kernel/include/file.hrl").
--include("internal.hrl").
 
 -define(QUIP, "Any of you quaids got a smint?").
 
@@ -31,6 +30,11 @@
 -define(SAVE_POST, mochiweb_request_post).
 -define(SAVE_COOKIE, mochiweb_request_cookie).
 -define(SAVE_FORCE_CLOSE, mochiweb_request_force_close).
+
+-define(recbuf_size(Socket), begin
+    {ok, [{recbuf, RecBufSize}]} = mochiweb_socket:getopts(Socket, [recbuf]),
+    RecBufSize
+end).
 
 %% @type iolist() = [iolist() | binary() | char()].
 %% @type iodata() = binary() | iolist().
@@ -485,12 +489,7 @@ stream_chunked_body(MaxChunkSize, Fun, FunState) ->
 stream_unchunked_body(0, Fun, FunState) ->
     Fun({0, <<>>}, FunState);
 stream_unchunked_body(Length, Fun, FunState) when Length > 0 ->
-    PktSize = case Length > ?RECBUF_SIZE of
-        true ->
-            ?RECBUF_SIZE;
-        false ->
-            Length
-    end,
+    PktSize = lists:min([?recbuf_size(Socket), Length]),
     Bin = recv(PktSize),
     NewState = Fun({PktSize, Bin}, FunState),
     stream_unchunked_body(Length - PktSize, Fun, NewState).

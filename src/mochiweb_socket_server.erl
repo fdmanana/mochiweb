@@ -26,6 +26,7 @@
          backlog=128,
          active_sockets=0,
          acceptor_pool_size=16,
+         recbuf_size=?DEFAULT_RECBUF_SIZE,
          ssl=false,
          ssl_opts=[{ssl_imp, new}],
          acceptor_pool=sets:new(),
@@ -102,6 +103,9 @@ parse_options([{acceptor_pool_size, Max} | Rest], State) ->
     MaxInt = ensure_int(Max),
     parse_options(Rest,
                   State#mochiweb_socket_server{acceptor_pool_size=MaxInt});
+parse_options([{recbuf_size, Size} | Rest], State) ->
+    parse_options(Rest,
+                  State#mochiweb_socket_server{recbuf_size=ensure_int(Size)});
 parse_options([{max, Max} | Rest], State) ->
     error_logger:info_report([{warning, "TODO: max is currently unsupported"},
                               {max, Max}]),
@@ -145,13 +149,14 @@ ipv6_supported() ->
             false
     end.
 
-init(State=#mochiweb_socket_server{ip=Ip, port=Port, backlog=Backlog, nodelay=NoDelay}) ->
+init(State=#mochiweb_socket_server{ip=Ip, port=Port, backlog=Backlog, nodelay=NoDelay,
+                                   recbuf_size=RecBufSize}) ->
     process_flag(trap_exit, true),
     BaseOpts = [binary,
                 {reuseaddr, true},
                 {packet, 0},
                 {backlog, Backlog},
-                {recbuf, ?RECBUF_SIZE},
+                {recbuf, RecBufSize},
                 {active, false},
                 {nodelay, NoDelay}],
     Opts = case Ip of

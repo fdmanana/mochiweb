@@ -39,6 +39,7 @@ start() ->
 %%     Options = [option()]
 %%     Option = {name, atom()} | {ip, string() | tuple()} | {backlog, integer()}
 %%              | {nodelay, boolean()} | {acceptor_pool_size, integer()}
+%%              | {recbuf_size, integer()}
 %%              | {ssl, boolean()} | {profile_fun, undefined | (Props) -> ok}
 %% @doc Start a mochiweb server.
 %%      profile_fun is used to profile accept timing.

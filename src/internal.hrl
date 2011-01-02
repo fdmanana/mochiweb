@@ -1,3 +1,3 @@
 
--define(RECBUF_SIZE, 8192).
+-define(DEFAULT_RECBUF_SIZE, 8192).
 

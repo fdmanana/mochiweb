@@ -5,7 +5,7 @@
 -module(mochiweb_socket).
 
 -export([listen/4, accept/1, recv/3, send/2, close/1, port/1, peername/1,
-         setopts/2, type/1]).
+         getopts/2, setopts/2, type/1]).
 
 -define(ACCEPT_TIMEOUT, 2000).
 
@@ -71,6 +71,11 @@ peername({ssl, Socket}) ->
     ssl:peername(Socket);
 peername(Socket) ->
     inet:peername(Socket).
+
+getopts({ssl, Socket}, Opts) ->
+    ssl:getopts(Socket, Opts);
+getopts(Socket, Opts) ->
+    inet:getopts(Socket, Opts).
 
 setopts({ssl, Socket}, Opts) ->
     ssl:setopts(Socket, Opts);
