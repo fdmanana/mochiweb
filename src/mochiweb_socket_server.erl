@@ -230,12 +230,13 @@ upgrade_state(State = #mochiweb_socket_server{}) ->
     State;
 upgrade_state({mochiweb_socket_server, Port, Loop, Name,
              Max, IP, Listen, NoDelay, Backlog, ActiveSockets,
-             AcceptorPoolSize, SSL, SSL_opts,
+             AcceptorPoolSize, RecBufSize, SSL, SSL_opts,
              AcceptorPool}) ->
     #mochiweb_socket_server{port=Port, loop=Loop, name=Name, max=Max, ip=IP,
                             listen=Listen, nodelay=NoDelay, backlog=Backlog,
                             active_sockets=ActiveSockets,
                             acceptor_pool_size=AcceptorPoolSize,
+                            recbuf_size=RecBufSize,
                             ssl=SSL,
                             ssl_opts=SSL_opts,
                             acceptor_pool=AcceptorPool}.
@@ -352,6 +353,7 @@ upgrade_state_test() ->
                 nodelay, backlog,
                 active_sockets,
                 acceptor_pool_size,
+                recbuf_size,
                 ssl, ssl_opts, acceptor_pool},
     State = upgrade_state(OldState),
     CmpState = #mochiweb_socket_server{port=port, loop=loop,
@@ -360,6 +362,7 @@ upgrade_state_test() ->
                                        backlog=backlog,
                                        active_sockets=active_sockets,
                                        acceptor_pool_size=acceptor_pool_size,
+                                       recbuf_size=recbuf_size,
                                        ssl=ssl, ssl_opts=ssl_opts,
                                        acceptor_pool=acceptor_pool,
                                        profile_fun=undefined},
